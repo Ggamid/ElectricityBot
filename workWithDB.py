@@ -56,29 +56,23 @@ class Sqlighter:
             cursor.close()
             connect.close()
 
-    # def save_order(phone_number, location, kind_order, comment=None):
-    #     try:
-    #         connect = sqlite3.connect("newBD.db")
-    #         cursor = connect.cursor()
-    #
-    #         if comment is None:
-    #             adder = """INSERT INTO order(kind_order, phone_number, geo_location) VALUES (?,?,?)"""
-    #             temp = (phone_number, location, kind_order)
-    #             cursor.execute(adder, temp)
-    #             connect.commit()
-    #             return "Заказ без комментария"
-    #
-    #         else:
-    #             listWthInfo = [kind_order, phone_number, location, comment]
-    #
-    #             cursor.execute("INSERT INTO order VALUES(?,?,?,?);", listWthInfo)
-    #             connect.commit()
-    #             return "Заказ с комментарием"
-    #     except sqlite3.Error as e:
-    #         print("Error", e)
-    #     finally:
-    #         cursor.close()
-    #         connect.close()
+    def save_order(phone_number, location, kind_order, data):
+        try:
+            connect = sqlite3.connect("newBD.db")
+            cursor = connect.cursor()
+
+
+            listWthInfo = [kind_order, phone_number, location, data]
+
+            cursor.execute("INSERT INTO order_table VALUES(?,?,?,?);", listWthInfo)
+            connect.commit()
+            return "Заказ с комментарием"
+        except sqlite3.Error as e:
+            print("Error", e)
+        finally:
+            cursor.close()
+            connect.close()
+
 
 
 
