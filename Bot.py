@@ -57,6 +57,8 @@ def reg_serv(message):
         bot.send_message(message.chat.id, "Ваш заказ успешно оформлен!")
         sticker = open("AnimatedSticker.tgs", "rb")
         bot.send_sticker(message.chat.id, sticker)
+    elif message.text == "Поддержка ⚙️" or message.text == "Список услуг 📃" or message.text == "Напишите отзыв ✍️":
+        bot.send_message(message.chat.id, "Отправьте сообщение еще раз")
     else:
         uncorrect = bot.send_message(message.chat.id, "Вы неправильно ввели данные, попробуйте снова")
         bot.register_next_step_handler(uncorrect, reg_serv)
@@ -70,6 +72,8 @@ def reg_serv2(message):
         bot.send_message(message.chat.id, "Ваш заказ успешно оформлен!")
         sticker = open("AnimatedSticker.tgs", "rb")
         bot.send_sticker(message.chat.id, sticker)
+    elif message.text == "Поддержка ⚙️" or message.text == "Список услуг 📃" or message.text == "Напишите отзыв ✍️":
+        bot.send_message(message.chat.id, "Отправьте сообщение еще раз")
     else:
         uncorrect = bot.send_message(message.chat.id, "Вы неправильно ввели данные, попробуйте снова")
         bot.register_next_step_handler(uncorrect, reg_serv2)
@@ -83,6 +87,8 @@ def reg_serv3(message):
         bot.send_message(message.chat.id, "Ваш заказ успешно оформлен!")
         sticker = open("AnimatedSticker.tgs", "rb")
         bot.send_sticker(message.chat.id, sticker)
+    elif message.text == "Поддержка ⚙️" or message.text == "Список услуг 📃" or message.text == "Напишите отзыв ✍️":
+        bot.send_message(message.chat.id, "Отправьте сообщение еще раз")
     else:
         uncorrect = bot.send_message(message.chat.id, "Вы неправильно ввели данные, попробуйте снова")
         bot.register_next_step_handler(uncorrect, reg_serv3)
@@ -96,14 +102,19 @@ def reg_serv4(message):
         bot.send_message(message.chat.id, "Ваш заказ успешно оформлен!")
         sticker = open("AnimatedSticker.tgs", "rb")
         bot.send_sticker(message.chat.id, sticker)
+    elif message.text == "Поддержка ⚙️" or message.text == "Список услуг 📃" or message.text == "Напишите отзыв ✍️":
+        bot.send_message(message.chat.id, "Отправьте сообщение еще раз")
     else:
         uncorrect = bot.send_message(message.chat.id, "Вы неправильно ввели данные, попробуйте снова")
         bot.register_next_step_handler(uncorrect, reg_serv4)
 
 
 def review(message):
-    Sqlighter.save_review(message.text)
-    bot.send_message(message.chat.id, "Спасибо! отзывы помогут нам развиваться! 😁")
+    if message.text != "Поддержка ⚙️" and message.text != "Список услуг 📃" and message.text != "Написать отзыв ✍️":
+        Sqlighter.save_review(message.text)
+        bot.send_message(message.chat.id, "Спасибо! отзывы помогут нам развиваться! 😁")
+    else:
+        bot.send_message(message.chat.id, "Нажмите еще раз.")
 
 
 bot = telebot.TeleBot(token)
