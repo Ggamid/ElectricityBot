@@ -30,8 +30,9 @@ class Sqlighter:
             connect = sqlite3.connect("newBD.db")
             cursor = connect.cursor()
 
-            info = cursor.execute("SELECT salary_sum, salary_date, holiday, peregovorka FROM workers WHERE telegram_id = ?",
-                                  [id]).fetchone()
+            info = cursor.execute(
+                "SELECT salary_sum, salary_date, holiday, peregovorka FROM workers WHERE telegram_id = ?",
+                [id]).fetchone()
             return info
 
 
@@ -89,6 +90,20 @@ class Sqlighter:
             cursor.close()
             connect.close()
 
+    def set_date_peregovorka(id, text):
+        try:
+            connect = sqlite3.connect("newBD.db")
+            cursor = connect.cursor()
+
+            cursor.execute("UPDATE workers SET peregovorka = ? WHERE telegram_id = ?", [text, id])
+            connect.commit()
+            return "Заказ с комментарием"
+        except sqlite3.Error as e:
+            print("Error", e)
+        finally:
+            cursor.close()
+            connect.close()
+
 
 def get_data():
     try:
@@ -107,4 +122,5 @@ def get_data():
     finally:
         cursor.close()
         connect.close()
+
 
