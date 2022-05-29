@@ -168,8 +168,7 @@ def check_peregovorki(stroka, listik):
                     return True
         return True
     except:
-        return "Error"
-
+        print("Error in check peregovorki")
 
 
 
