@@ -1,6 +1,5 @@
 import sqlite3
 from datetime import date  # Дата
-from experiments import sendler_notification_holiday
 
 connect = sqlite3.connect("newBD.db")
 cursor = connect.cursor()
@@ -90,14 +89,16 @@ class Sqlighter:
             cursor.close()
             connect.close()
 
-    def set_date_peregovorka(id, text):
+    def set_date_peregovorka(id, text1):
         try:
+
+            date, ot, do = text1.split()[0], text1.split()[1], text1.split()[2]
             connect = sqlite3.connect("newBD.db")
             cursor = connect.cursor()
 
-            cursor.execute("UPDATE workers SET peregovorka = ? WHERE telegram_id = ?", [text, id])
+            cursor.execute("UPDATE workers SET peregovorka = ?, peregovorka_ot = ?, peregovorka_do = ? WHERE telegram_id = ?", [date, ot, do, id])
             connect.commit()
-            return "Заказ с комментарием"
+            return f"Переговорка заброниворона на {text1} число с {ot} и до {do} часов"
         except sqlite3.Error as e:
             print("Error", e)
         finally:
@@ -122,5 +123,53 @@ def get_data():
     finally:
         cursor.close()
         connect.close()
+
+
+def get_peregovorki():
+    try:
+        connect = sqlite3.connect("newBD.db")
+        cursor = connect.cursor()
+
+        first = cursor.execute("SELECT peregovorka, peregovorka_ot, peregovorka_do FROM workers").fetchall()
+
+        second = []
+        for i in first:
+            second.append(i)
+        connect.commit()
+        return second
+    except sqlite3.Error as e:
+        print("Error", e)
+    finally:
+        cursor.close()
+        connect.close()
+
+
+def check_peregovorki(stroka, listik):
+    try:
+        digit_p, month_p, year_p, ot, do = int(stroka.split()[0].split(".")[0]), int(stroka.split()[0].split(".")[1]), int(stroka.split()[0].split(".")[2]), int(stroka.split()[1]), int(stroka.split()[2])
+        for i in range(0, len(listik)):
+            if listik[i][0] == "":
+                continue
+            else:
+                digit_listik, month_listik, year_listik = int(listik[i][0].split(".")[0]), int(listik[i][0].split(".")[1]), int(listik[i][0].split(".")[2])
+                ot_listik, do_listik = int(listik[i][-2]), int(listik[i][-1])
+                if year_listik == year_p:
+                    if month_p == month_listik:
+                        if digit_listik == digit_p:
+                            if (ot_listik == ot) or (ot_listik < ot < do_listik) or (ot_listik < do < do_listik) or (do == do_listik) or (ot < ot_listik < do):
+                                return "На это время переговорка занята"
+                            else:
+                                return True
+                        else:
+                            return True
+                    else:
+                        return True
+                else:
+                    return True
+        return True
+    except:
+        return "Error"
+
+
 
 
