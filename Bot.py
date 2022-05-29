@@ -13,13 +13,63 @@ write_review = types.KeyboardButton("Написать отзыв ✍️")
 support = types.KeyboardButton("Поддержка ⚙️")
 kb.add(get_list, write_review, support)
 
+kb_undo = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=1)
+undo = types.KeyboardButton("Отмена ❌")
+kb_undo.add(undo)
+
 kb_special = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=4)
 set_peregovorka = types.KeyboardButton("..Переговорка?..")
 about_salary = types.KeyboardButton("..INFO?..")
 info_but = types.KeyboardButton("⬅️COME BACK⬅️")
 kb_special.add(set_peregovorka, info_but, about_salary)
 
-sticker = open("AnimatedSticker.tgs", "rb")
+sticker = open("sticker.webp", "rb")
+
+
+def match_reg_serv(mes):
+    text = mes.text
+    text = text.split(", ")
+    kind_of_serv = text[0]
+    if len(text) == 4:
+        match kind_of_serv:
+            case "1":
+
+                Sqlighter.save_order("Провести электричество в дом", text[1], text[2], text[3])
+                bot.send_message(mes.chat.id,
+                                 "Вы заказали услугу 'Провести электричество в дом"
+                                 , reply_markup=kb)
+                bot.send_sticker(mes.chat.id, sticker)
+
+            case "2":
+
+                Sqlighter.save_order("Дизайнерские лампы для вашего дома", text[1], text[2], text[3])
+                bot.send_message(mes.chat.id,
+                                 "Вы заказали услугу 'Дизайнерские лампы для вашего дома"
+                                 , reply_markup=kb)
+                bot.send_sticker(mes.chat.id, sticker)
+
+            case "3":
+
+                Sqlighter.save_order("Установка кондиционеров", text[1], text[2], text[3])
+                bot.send_message(mes.chat.id,
+                                 "Вы заказали услугу 'Установка кондиционеров"
+                                 , reply_markup=kb)
+                bot.send_sticker(mes.chat.id, sticker)
+
+            case "4":
+
+                Sqlighter.save_order("Подключение умного дома", text[1], text[2], text[3])
+                bot.send_message(mes.chat.id,
+                                 "Вы заказали услугу 'Подключение умного дома"
+                                 , reply_markup=kb)
+                bot.send_sticker(mes.chat.id, sticker)
+            case _:
+                send_reply(mes)
+    elif mes.text == "Отмена ❌":
+        send_reply(mes)
+    else:
+        wrong = bot.send_message(mes.chat.id, "Не правильно введены данные")
+        bot.register_next_step_handler(wrong, match_reg_serv)
 
 
 def set_pere(message):
@@ -27,119 +77,23 @@ def set_pere(message):
         bot.send_message(message.chat.id, Sqlighter.set_date_peregovorka(message.chat.id, message.text))
         bot.send_sticker(message.chat.id, sticker)
 
-    else:
-        bot.send_message(message.chat.id, "На это время переговорка занята, выберете другую дату")
-
-
-
-def service_checker(message):
-    if message.text == "1":
-        reg = bot.send_message(message.chat.id,
-                               "Вы заказали услугу 'Провести электричество в дом' \nВ следующем сообщении отравьте через пробел ваш номер телефона, адрес и дату\n"
-                               "Пример:\n"
-                               "89992576336, Улица Пушкина дом 4 квартира 25, 01.06.2022")
-        bot.register_next_step_handler(reg, reg_serv)
-    elif message.text == "2":
-        reg = bot.send_message(message.chat.id,
-                               "Вы заказали услугу 'Дизайнерские лампы для вашего дома' \nВ следующем сообщении отравьте через пробел ваш номер телефона, адрес и дату\n"
-                               "Пример:\n"
-                               "89992576336, Улица Пушкина дом 4 квартира 25, 01.06.2022")
-        bot.register_next_step_handler(reg, reg_serv)
-    elif message.text == "3":
-        reg = bot.send_message(message.chat.id,
-                               "Вы заказали услугу 'Установка кондиционеров' \nВ следующем сообщении отравьте через пробел ваш номер телефона, адрес и дату\n"
-                               "Пример:\n"
-                               "89992576336, Улица Пушкина дом 4 квартира 25, 01.06.2022")
-        bot.register_next_step_handler(reg, reg_serv)
-    elif message.text == "4":
-        reg = bot.send_message(message.chat.id,
-                               "Вы заказали услугу 'Подключение умного дома' \nВ следующем сообщении отравьте через запятую и пробел ваш номер телефона, адрес и дату\n"
-                               "Пример:\n"
-                               "89992576336, Улица Пушкина дом 4 квартира 25, 01.06.2022")
-        bot.register_next_step_handler(reg, reg_serv)
+    elif check_peregovorki(message.text, get_peregovorki()) == "На это время переговорка занята":
+        bot.send_message(message.chat.id, "На это время переговорка занята, выберете другую дату", reply_markup=kb_undo)
     else:
         send_reply(message)
 
 
-
-def reg_serv(message):
-    text = message.text
-    text = text.split(", ")
-
-    if len(text) == 3:
-        Sqlighter.save_order("Провести электричество в дом", text[0], text[1], text[2])
-        bot.send_message(message.chat.id, "Ваш заказ успешно оформлен!")
-        bot.send_sticker(message.chat.id, sticker)
-
-    elif message.text == "Поддержка ⚙️" or message.text == "Список услуг 📃" or message.text == "Напишите отзыв ✍️":
-        bot.send_message(message.chat.id, "Отправьте сообщение еще раз")
-
-    else:
-        uncorrect = bot.send_message(message.chat.id, "Вы неправильно ввели данные, попробуйте снова")
-        bot.register_next_step_handler(uncorrect, reg_serv)
-
-
-def reg_serv2(message):
-    text = message.text
-    text = text.split(", ")
-    if len(text) == 3:
-        Sqlighter.save_order("Дизайнерские лампы для вашего дома", text[0], text[1], text[2])
-        bot.send_message(message.chat.id, "Ваш заказ успешно оформлен!")
-        sticker = open("AnimatedSticker.tgs", "rb")
-        bot.send_sticker(message.chat.id, sticker)
-
-    elif message.text == "Поддержка ⚙️" or message.text == "Список услуг 📃" or message.text == "Напишите отзыв ✍️":
-        bot.send_message(message.chat.id, "Отправьте сообщение еще раз")
-
-    else:
-        uncorrect = bot.send_message(message.chat.id, "Вы неправильно ввели данные, попробуйте снова")
-        bot.register_next_step_handler(uncorrect, reg_serv2)
-
-
-def reg_serv3(message):
-    text = message.text
-    text = text.split(", ")
-    if len(text) == 3:
-        Sqlighter.save_order("Установка кондиционеров", text[0], text[1], text[2])
-        bot.send_message(message.chat.id, "Ваш заказ успешно оформлен!")
-        sticker = open("AnimatedSticker.tgs", "rb")
-        bot.send_sticker(message.chat.id, sticker)
-
-    elif message.text == "Поддержка ⚙️" or message.text == "Список услуг 📃" or message.text == "Напишите отзыв ✍️":
-        bot.send_message(message.chat.id, "Отправьте сообщение еще раз")
-
-    else:
-        uncorrect = bot.send_message(message.chat.id, "Вы неправильно ввели данные, попробуйте снова")
-        bot.register_next_step_handler(uncorrect, reg_serv3)
-
-
-def reg_serv4(message):
-    text = message.text
-    text = text.split(", ")
-    if len(text) == 3:
-        Sqlighter.save_order("Подключение умного дома", text[0], text[1], text[2])
-        bot.send_message(message.chat.id, "Ваш заказ успешно оформлен!")
-        sticker = open("AnimatedSticker.tgs", "rb")
-        bot.send_sticker(message.chat.id, sticker)
-
-    elif message.text == "Поддержка ⚙️" or message.text == "Список услуг 📃" or message.text == "Напишите отзыв ✍️":
-        bot.send_message(message.chat.id, "Отправьте сообщение еще раз")
-
-    else:
-        uncorrect = bot.send_message(message.chat.id, "Вы неправильно ввели данные, попробуйте снова")
-        bot.register_next_step_handler(uncorrect, reg_serv4)
-
-
 def review(message):
-    if message.text != "Поддержка ⚙️" and message.text != "Список услуг 📃" and message.text != "Написать отзыв ✍️":
+    if message.text != "Поддержка ⚙️" and message.text != "Список услуг 📃" and message.text != "Написать отзыв ✍️" and message.text != "Отмена ❌":
         Sqlighter.save_review(message.text)
 
         bot.send_message(message.chat.id, "Спасибо! отзывы помогут нам развиваться! 😁", reply_markup=kb)
+        bot.send_sticker(message.chat.id, sticker)
 
     else:
-        bot.send_message(message.chat.id, "Нажмите еще раз.")
+        send_reply(message)
 
-
+#1791379170
 bot = telebot.TeleBot(token)
 
 
@@ -150,19 +104,24 @@ def sendler(message):
         bot.send_message(message.chat.id, f"Здравствуйте {message.from_user.first_name}, "
                                           f"я бот компании *Электротехник*"
                          , parse_mode="markdown", reply_markup=kb)
+        print(message.chat.id)
+    else:
+        bot.send_message(message.chat.id, "HI worker", reply_markup=kb)
+        print(message.chat.id)
 
 
 @bot.message_handler(content_types=["text"], chat_types=["private"])
 def send_reply(message):
     if message.text == "Написать отзыв ✍️":
-        kb = types.ReplyKeyboardRemove()
-        sent = bot.send_message(message.chat.id, "Напишите отзыв ✍️", reply_markup=kb)
+        sent = bot.send_message(message.chat.id, "Напишите отзыв ✍️", reply_markup=kb_undo)
         bot.register_next_step_handler(sent, review)
 
     elif message.text == "Список услуг 📃":
         photo = open("services.png", "rb")
-        first = bot.send_photo(message.chat.id, photo, "Наши услуги")
-        bot.register_next_step_handler(first, service_checker)
+        first = bot.send_photo(message.chat.id, photo,
+                               "Чтобы оформить услугу отправьте через запятую номер услуги, ваш номер телефона, адрес проживания, и дату на которую хотите заказать услугу. \n Пример: \n"
+                               "1, 89992576336, Улица Пушкина дом 4 квартира 25, 01.06.2022", reply_markup=kb_undo)
+        bot.register_next_step_handler(first, match_reg_serv)
 
     elif message.text == "Поддержка ⚙️":
         url_but = types.InlineKeyboardMarkup(row_width=1)
@@ -176,10 +135,10 @@ def send_reply(message):
                          parse_mode="markdown", reply_markup=kb_special)
 
     elif message.text == "..Переговорка?..":
-        rm_kb = types.ReplyKeyboardRemove()
-        nexter = bot.send_message(message.chat.id, "Отправьте дату на которую хотите забронировать переговорку в формате:\n"
-                                                   "22.02.2022 15 16\n"
-                                                   "(последние две цифры - со скольки и до скольки часов", reply_markup=rm_kb)
+        nexter = bot.send_message(message.chat.id,
+                                  "Отправьте дату на которую хотите забронировать переговорку в формате:\n"
+                                  "22.02.2022 15 16\n"
+                                  "(последние две цифры - со скольки и до скольки часов", reply_markup=kb_undo)
         bot.register_next_step_handler(nexter, set_pere)
 
     elif message.text == "..INFO?..":
@@ -198,9 +157,23 @@ def send_reply(message):
         kb.add(get_list, write_review, support)
 
         bot.send_message(message.chat.id, f"Клиентское меню", reply_markup=kb)
+    elif message.text == "Отмена ❌":
+        kb = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=3)
+        get_list = types.KeyboardButton("Список услуг 📃")
+        write_review = types.KeyboardButton("Написать отзыв ✍️")
+        support = types.KeyboardButton("Поддержка ⚙️")
+        kb.add(get_list, write_review, support)
+
+        bot.send_message(message.chat.id, f"Главное меню", reply_markup=kb)
+
 
     else:
-        bot.send_message("Я вас не понимаю :( ")
+        kb = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=3)
+        get_list = types.KeyboardButton("Список услуг 📃")
+        write_review = types.KeyboardButton("Написать отзыв ✍️")
+        support = types.KeyboardButton("Поддержка ⚙️")
+        kb.add(get_list, write_review, support)
+        bot.send_message(message.chat.id, "Я вас не понимаю :( ", reply_markup=kb)
 
 
 @bot.message_handler(commands=["start"], chat_types=["group"])
