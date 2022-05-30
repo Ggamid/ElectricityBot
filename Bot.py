@@ -45,7 +45,6 @@ def match_reg_serv(mes):
                 bot.send_message(mes.chat.id,
                                  "Заказ оформлен на услугу 'Дизайнерские лампы для вашего дома"
                                  , reply_markup=kb)
-                bot.send_sticker(mes.chat.id, sticker)
 
             case "3":
 
@@ -53,7 +52,6 @@ def match_reg_serv(mes):
                 bot.send_message(mes.chat.id,
                                  "Заказ оформлен на услугу 'Установка кондиционеров"
                                  , reply_markup=kb)
-                bot.send_sticker(mes.chat.id, sticker)
 
             case "4":
 
@@ -61,7 +59,6 @@ def match_reg_serv(mes):
                 bot.send_message(mes.chat.id,
                                  "Заказ оформлен на услугу 'Подключение умного дома"
                                  , reply_markup=kb)
-                bot.send_sticker(mes.chat.id, sticker)
             case _:
                 send_reply(mes)
     elif mes.text == "Отмена ❌":
