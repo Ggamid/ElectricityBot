@@ -36,28 +36,28 @@ def match_reg_serv(mes):
 
                 Sqlighter.save_order("Провести электричество в дом", text[1], text[2], text[3])
                 bot.send_message(mes.chat.id,
-                                 "Заказ оформлен на услугу 'Провести электричество в дом'"
+                                 "✅ Заказ оформлен на услугу 'Провести электричество в дом'"
                                  , reply_markup=kb)
 
             case "2":
 
                 Sqlighter.save_order("Дизайнерские лампы для вашего дома", text[1], text[2], text[3])
                 bot.send_message(mes.chat.id,
-                                 "Заказ оформлен на услугу 'Дизайнерские лампы для вашего дома"
+                                 "✅ Заказ оформлен на услугу 'Дизайнерские лампы для вашего дома"
                                  , reply_markup=kb)
 
             case "3":
 
                 Sqlighter.save_order("Установка кондиционеров", text[1], text[2], text[3])
                 bot.send_message(mes.chat.id,
-                                 "Заказ оформлен на услугу 'Установка кондиционеров"
+                                 "✅ Заказ оформлен на услугу 'Установка кондиционеров"
                                  , reply_markup=kb)
 
             case "4":
 
                 Sqlighter.save_order("Подключение умного дома", text[1], text[2], text[3])
                 bot.send_message(mes.chat.id,
-                                 "Заказ оформлен на услугу 'Подключение умного дома"
+                                 "✅ Заказ оформлен на услугу 'Подключение умного дома"
                                  , reply_markup=kb)
             case _:
                 send_reply(mes)
