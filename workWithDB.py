@@ -171,4 +171,3 @@ def check_peregovorki(stroka, listik):
         print("Error in check peregovorki")
 
 
-print(get_data())
