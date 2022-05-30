@@ -36,15 +36,14 @@ def match_reg_serv(mes):
 
                 Sqlighter.save_order("Провести электричество в дом", text[1], text[2], text[3])
                 bot.send_message(mes.chat.id,
-                                 "Вы заказали услугу 'Провести электричество в дом"
+                                 "Заказ оформлен на услугу 'Провести электричество в дом'"
                                  , reply_markup=kb)
-                bot.send_sticker(mes.chat.id, sticker)
 
             case "2":
 
                 Sqlighter.save_order("Дизайнерские лампы для вашего дома", text[1], text[2], text[3])
                 bot.send_message(mes.chat.id,
-                                 "Вы заказали услугу 'Дизайнерские лампы для вашего дома"
+                                 "Заказ оформлен на услугу 'Дизайнерские лампы для вашего дома"
                                  , reply_markup=kb)
                 bot.send_sticker(mes.chat.id, sticker)
 
@@ -52,7 +51,7 @@ def match_reg_serv(mes):
 
                 Sqlighter.save_order("Установка кондиционеров", text[1], text[2], text[3])
                 bot.send_message(mes.chat.id,
-                                 "Вы заказали услугу 'Установка кондиционеров"
+                                 "Заказ оформлен на услугу 'Установка кондиционеров"
                                  , reply_markup=kb)
                 bot.send_sticker(mes.chat.id, sticker)
 
@@ -60,7 +59,7 @@ def match_reg_serv(mes):
 
                 Sqlighter.save_order("Подключение умного дома", text[1], text[2], text[3])
                 bot.send_message(mes.chat.id,
-                                 "Вы заказали услугу 'Подключение умного дома"
+                                 "Заказ оформлен на услугу 'Подключение умного дома"
                                  , reply_markup=kb)
                 bot.send_sticker(mes.chat.id, sticker)
             case _:
@@ -178,7 +177,7 @@ def send_reply(message):
 
 @bot.message_handler(commands=["start"], chat_types=["group"])
 def sendler(message):
-    bot.send_message(message.chat.id, f"Здравствуйте,"f"я бот компании *Электротехник*"
+    bot.send_message(message.chat.id, f"Всем привет! Я бот компании *Электротехник*"
                                       f" и я буду следить за порядком в чате!", parse_mode="markdown",
                      reply_markup=None)
 
